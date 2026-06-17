@@ -8,7 +8,7 @@ Dashboard UI Phase 2
 
 <!-- Not Started|In Progress|Completed -->
 
-Not Started
+Completed
 
 ## Goals
 
@@ -40,3 +40,4 @@ Not Started
 - Init
 - Add initial Next.js setup, global styles, mock data, and project overview
 - feat: scaffold dashboard UI phase 1 with shadcn
+- feat: implement collapsible dashboard sidebar phase 2 with shadcn

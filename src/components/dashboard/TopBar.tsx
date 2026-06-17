@@ -10,13 +10,7 @@ import { SidebarTrigger } from "@/src/components/ui/sidebar";
 export function TopBar() {
   return (
     <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border bg-background px-4">
-      <SidebarTrigger className="md:hidden" />
-      <div className="flex items-center gap-2 font-semibold">
-        <span className="flex size-7 items-center justify-center rounded-md bg-primary text-sm text-primary-foreground">
-          D
-        </span>
-        <span>DevStash</span>
-      </div>
+      <SidebarTrigger />
 
       <Separator orientation="vertical" className="h-6!" />
 

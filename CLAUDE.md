@@ -28,7 +28,7 @@ Read the following to get the full context of the project:
 - **React 19**
 - **Tailwind CSS v4** (imported via `@import "tailwindcss"` in `globals.css`, no config file needed)
 - **shadcn/ui** for UI components (see below)
-- **TypeScript** — strict mode, path alias `@/*` maps to the repo root
+- **TypeScript** — strict mode. Path alias `@/*` maps to the **repo root** (`tsconfig.json` has `"@/*": ["./*"]`), not `./src/*`. This is the `create-next-app` default alias left uncustomized while `src/` was enabled, so the two don't line up: code lives in `src/`, but `@/` resolves above it. Every alias therefore needs the `src/` prefix — e.g. `@/src/lib/utils`, `@/src/components/ui`.
 
 ## UI Components (shadcn/ui)
 
