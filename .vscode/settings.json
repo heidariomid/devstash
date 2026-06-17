@@ -1,0 +1,10 @@
+{
+  "editor.colorDecorators": true,
+  "editor.colorDecoratorsLimit": 500,
+  "css.colorDecorators.limit": 500,
+  "editor.quickSuggestions": {
+    "strings": false
+  },
+  "color-highlight.markerType": "dot-before",
+  "color-highlight.languages": ["typescript", "typescriptreact", "javascript", "javascriptreact", "css", "scss"]
+}
