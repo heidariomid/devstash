@@ -1,15 +1,11 @@
-"use client";
-
 import Link from "next/link";
-import { ChevronDown, Folder, Star } from "lucide-react";
+import { ChevronDown, Settings, Star } from "lucide-react";
 
+import { getSidebarCollections } from "@/src/lib/db/collections";
+import { getSystemItemTypes } from "@/src/lib/db/items";
+import { getDemoUserId } from "@/src/lib/db/user";
 import { getItemTypeIcon } from "@/src/lib/icons";
-import {
-  collections,
-  currentUser,
-  items,
-  itemTypes,
-} from "@/src/lib/mock-data";
+import { currentUser } from "@/src/lib/mock-data";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
 import { Button } from "@/src/components/ui/button";
 import {
@@ -30,24 +26,33 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/src/components/ui/sidebar";
-import { Settings } from "lucide-react";
 
 // Slug used for the /items/[type] route, e.g. "Snippets" -> "snippets".
 function typeSlug(name: string) {
   return name.toLowerCase();
 }
 
-// Count of items per type, derived from the mock data.
-const itemCountByType = items.reduce<Record<string, number>>((acc, item) => {
-  acc[item.typeId] = (acc[item.typeId] ?? 0) + 1;
-  return acc;
-}, {});
+export async function DashboardSidebar() {
+  let itemTypes: Awaited<ReturnType<typeof getSystemItemTypes>> = [];
+  let favorites: Awaited<ReturnType<typeof getSidebarCollections>>["favorites"] =
+    [];
+  let recents: Awaited<ReturnType<typeof getSidebarCollections>>["recents"] = [];
 
-const favoriteCollections = collections.filter((c) => c.isFavorite);
-// No timestamps in the mock data yet, so array order stands in for recency.
-const recentCollections = collections;
+  try {
+    const userId = await getDemoUserId();
+    if (userId) {
+      const [types, collections] = await Promise.all([
+        getSystemItemTypes(userId),
+        getSidebarCollections(userId),
+      ]);
+      itemTypes = types;
+      favorites = collections.favorites;
+      recents = collections.recents;
+    }
+  } catch {
+    // DB unreachable — render with empty lists
+  }
 
-export function DashboardSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="h-14 justify-center border-b border-border px-4">
@@ -74,7 +79,6 @@ export function DashboardSidebar() {
                 <SidebarMenu>
                   {itemTypes.map((type) => {
                     const Icon = getItemTypeIcon(type.icon);
-                    const count = itemCountByType[type.id] ?? 0;
                     return (
                       <SidebarMenuItem key={type.id}>
                         <SidebarMenuButton asChild>
@@ -83,7 +87,7 @@ export function DashboardSidebar() {
                             <span>{type.name}</span>
                           </Link>
                         </SidebarMenuButton>
-                        <SidebarMenuBadge>{count}</SidebarMenuBadge>
+                        <SidebarMenuBadge>{type.itemCount}</SidebarMenuBadge>
                       </SidebarMenuItem>
                     );
                   })}
@@ -103,13 +107,13 @@ export function DashboardSidebar() {
               </CollapsibleTrigger>
             </SidebarGroupLabel>
             <CollapsibleContent>
-              {favoriteCollections.length > 0 && (
+              {favorites.length > 0 && (
                 <SidebarGroupContent>
                   <SidebarGroupLabel className="px-2">
                     Favorites
                   </SidebarGroupLabel>
                   <SidebarMenu>
-                    {favoriteCollections.map((collection) => (
+                    {favorites.map((collection) => (
                       <SidebarMenuItem key={collection.id}>
                         <SidebarMenuButton asChild>
                           <Link href={`/collections/${collection.id}`}>
@@ -131,11 +135,17 @@ export function DashboardSidebar() {
                   All Collections
                 </SidebarGroupLabel>
                 <SidebarMenu>
-                  {recentCollections.map((collection) => (
+                  {recents.map((collection) => (
                     <SidebarMenuItem key={collection.id}>
                       <SidebarMenuButton asChild>
                         <Link href={`/collections/${collection.id}`}>
-                          <Folder />
+                          <span
+                            className="size-2 shrink-0 rounded-full"
+                            style={{
+                              backgroundColor:
+                                collection.dominantColor ?? "#6b7280",
+                            }}
+                          />
                           <span>{collection.name}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -146,6 +156,19 @@ export function DashboardSidebar() {
                   ))}
                 </SidebarMenu>
               </SidebarGroupContent>
+
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link
+                      href="/collections"
+                      className="text-muted-foreground"
+                    >
+                      <span>View all collections</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
             </CollapsibleContent>
           </SidebarGroup>
         </Collapsible>
@@ -155,10 +178,7 @@ export function DashboardSidebar() {
         <div className="flex items-center gap-2 p-1">
           <Avatar className="size-8">
             {currentUser.avatarUrl && (
-              <AvatarImage
-                src={currentUser.avatarUrl}
-                alt={currentUser.name}
-              />
+              <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} />
             )}
             <AvatarFallback>
               {currentUser.name

@@ -1,5 +1,57 @@
 import { prisma } from "@/src/lib/prisma";
 
+export interface SidebarCollection {
+  id: string;
+  name: string;
+  itemCount: number;
+  isFavorite: boolean;
+  dominantColor: string | null;
+}
+
+// Collections for the sidebar: favorites (shown with a star) and recents
+// (shown with a colored circle of their most-used item type).
+export async function getSidebarCollections(
+  userId: string
+): Promise<{ favorites: SidebarCollection[]; recents: SidebarCollection[] }> {
+  const collections = await prisma.collection.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+    include: {
+      items: { include: { type: { select: { color: true } } } },
+    },
+  });
+
+  const mapped: SidebarCollection[] = collections.map((col) => {
+    const colorCounts = new Map<string, number>();
+    for (const item of col.items) {
+      const color = item.type.color ?? "#6b7280";
+      colorCounts.set(color, (colorCounts.get(color) ?? 0) + 1);
+    }
+
+    let dominantColor: string | null = null;
+    let maxCount = 0;
+    for (const [color, count] of colorCounts) {
+      if (count > maxCount) {
+        maxCount = count;
+        dominantColor = color;
+      }
+    }
+
+    return {
+      id: col.id,
+      name: col.name,
+      itemCount: col.items.length,
+      isFavorite: col.isFavorite,
+      dominantColor,
+    };
+  });
+
+  return {
+    favorites: mapped.filter((c) => c.isFavorite),
+    recents: mapped,
+  };
+}
+
 export interface CollectionWithTypeSummary {
   id: string;
   name: string;

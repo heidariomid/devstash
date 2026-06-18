@@ -1,7 +1,7 @@
 # Current Feature
 
 <!-- Feature Name -->
-Dashboard Items — Live Data from Neon DB
+Stats & Sidebar — Live Data from Neon DB
 
 ## Status
 
@@ -11,21 +11,20 @@ Completed
 ## Goals
 
 <!-- Goals & requirements -->
-Replace dummy item data in the dashboard main area with actual data from the Neon database via Prisma.
+Show main-area stats, sidebar item types, and sidebar collections from the database instead of `src/lib/mock-data.ts`.
 
-- Create `src/lib/db/items.ts` with data fetching functions
-- Fetch items directly in server component (pinned + recent items)
-- Item card icon/border derived from item type
-- Display item type tags and all existing card content
-- If there are no pinned items, hide that section entirely
-- Update collection stats display
+- Display main-area stats from database data, keeping the current design/layout
+- Display system item types in the sidebar with their icons, linking to `/items/[typename]`
+- Add a "View all collections" link under the collections list that goes to `/collections`
+- Keep the star icons for favorite collections; for recents, each collection shows a colored circle based on the most-used item type in that collection
+- Create `src/lib/db/items.ts` and add the database functions (use `src/lib/db/collections.ts` for reference)
 
 ## Notes
 
 <!-- Any extra notes -->
-Reference: `context/features/dashboard-items-spec.md`
-Reference screenshot if needed: `context/screenshots/dashboard-ui-main.png`
-Do not use `src/lib/mock-data.ts` for item data — DB only.
+Reference: `context/features/stats-sidebar-spec.md`
+Reference: `src/lib/db/collections.ts`
+Do not use `src/lib/mock-data.ts` — DB only.
 
 ## History
 
@@ -43,3 +42,4 @@ Do not use `src/lib/mock-data.ts` for item data — DB only.
 - feat: dashboard collections live data from Neon DB via Prisma
 - feat: dashboard items live data from Neon DB via Prisma
 - fix: graceful DB error handling and connection timeout for offline/no-VPN environments
+- feat: sidebar item types & collections live data from Neon DB via Prisma

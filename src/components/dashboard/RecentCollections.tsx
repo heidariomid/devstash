@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Star } from "lucide-react";
 
 import { getRecentCollections } from "@/src/lib/db/collections";
+import { getDemoUserId } from "@/src/lib/db/user";
 import { getItemTypeIcon } from "@/src/lib/icons";
 import {
   Card,
@@ -10,18 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/src/components/ui/card";
-
-// Hardcoded to the demo user until auth is in place.
-const DEMO_USER_EMAIL = "demo@devstash.io";
-
-async function getDemoUserId(): Promise<string | null> {
-  const { prisma } = await import("@/src/lib/prisma");
-  const user = await prisma.user.findUnique({
-    where: { email: DEMO_USER_EMAIL },
-    select: { id: true },
-  });
-  return user?.id ?? null;
-}
 
 export async function RecentCollections() {
   let collections: Awaited<ReturnType<typeof getRecentCollections>> = [];

@@ -2,19 +2,8 @@ import { FolderHeart, Folders, FileStack, Star } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { getDashboardStats } from "@/src/lib/db/items";
+import { getDemoUserId } from "@/src/lib/db/user";
 import { Card, CardContent } from "@/src/components/ui/card";
-
-// Hardcoded to the demo user until auth is in place.
-const DEMO_USER_EMAIL = "demo@devstash.io";
-
-async function getDemoUserId(): Promise<string | null> {
-  const { prisma } = await import("@/src/lib/prisma");
-  const user = await prisma.user.findUnique({
-    where: { email: DEMO_USER_EMAIL },
-    select: { id: true },
-  });
-  return user?.id ?? null;
-}
 
 interface Stat {
   label: string;

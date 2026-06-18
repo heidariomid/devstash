@@ -71,3 +71,36 @@ export async function getDashboardStats(
 
   return { totalItems, totalCollections, favoriteItems, favoriteCollections };
 }
+
+export interface ItemTypeSummary {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  itemCount: number;
+}
+
+// System item types with a per-type item count for the sidebar.
+export async function getSystemItemTypes(
+  userId: string
+): Promise<ItemTypeSummary[]> {
+  const types = await prisma.itemType.findMany({
+    where: { isSystem: true },
+    orderBy: { name: "asc" },
+    select: {
+      id: true,
+      name: true,
+      icon: true,
+      color: true,
+      _count: { select: { items: { where: { userId } } } },
+    },
+  });
+
+  return types.map((t) => ({
+    id: t.id,
+    name: t.name,
+    icon: t.icon ?? "File",
+    color: t.color ?? "#6b7280",
+    itemCount: t._count.items,
+  }));
+}
