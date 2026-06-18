@@ -6,5 +6,25 @@
     "strings": false
   },
   "color-highlight.markerType": "dot-before",
-  "color-highlight.languages": ["typescript", "typescriptreact", "javascript", "javascriptreact", "css", "scss"]
+  "color-highlight.languages": ["typescript", "typescriptreact", "javascript", "javascriptreact", "css", "scss"],
+  "files.exclude": {
+    "**/.next": true,
+    "**/.vercel": true,
+    "**/node_modules": true,
+    "**/next-env.d.ts": true,
+    "**/.env.example": true,
+    "**/eslint.config.mjs": true,
+    "**/tsconfig.json": true,
+    "**/README.md": true,
+    "**/postcss.config.mjs": true,
+    "**/pnpm-workspace.yaml": true,
+    "**/pnpm-lock.yaml": true,
+    "**/components.json": true,
+    "public": true,
+    "**/prisma.config.ts": true,
+    "**/next.config.ts": true,
+    "**/.gitignore": true,
+    "**CLAUDE.md": true,
+    "**.env": true
+  }
 }

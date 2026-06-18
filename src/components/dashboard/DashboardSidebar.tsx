@@ -7,6 +7,7 @@ import { getDemoUserId } from "@/src/lib/db/user";
 import { getItemTypeIcon } from "@/src/lib/icons";
 import { currentUser } from "@/src/lib/mock-data";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
+import { Badge } from "@/src/components/ui/badge";
 import { Button } from "@/src/components/ui/button";
 import {
   Collapsible,
@@ -31,6 +32,9 @@ import {
 function typeSlug(name: string) {
   return name.toLowerCase();
 }
+
+// Item types gated behind the Pro plan.
+const PRO_TYPES = new Set(["file", "image"]);
 
 export async function DashboardSidebar() {
   let itemTypes: Awaited<ReturnType<typeof getSystemItemTypes>> = [];
@@ -79,12 +83,21 @@ export async function DashboardSidebar() {
                 <SidebarMenu>
                   {itemTypes.map((type) => {
                     const Icon = getItemTypeIcon(type.icon);
+                    const isPro = PRO_TYPES.has(typeSlug(type.name));
                     return (
                       <SidebarMenuItem key={type.id}>
                         <SidebarMenuButton asChild>
                           <Link href={`/items/${typeSlug(type.name)}`}>
                             <Icon style={{ color: type.color }} />
                             <span>{type.name}</span>
+                            {isPro && (
+                              <Badge
+                                variant="secondary"
+                                className="px-1.5 py-0 text-[10px] font-semibold tracking-wide text-muted-foreground"
+                              >
+                                PRO
+                              </Badge>
+                            )}
                           </Link>
                         </SidebarMenuButton>
                         <SidebarMenuBadge>{type.itemCount}</SidebarMenuBadge>
