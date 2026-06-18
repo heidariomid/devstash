@@ -3,28 +3,24 @@ import Link from "next/link";
 import { Pin, Star } from "lucide-react";
 
 import { getItemTypeIcon } from "@/src/lib/icons";
-import { itemTypes, type Item } from "@/src/lib/mock-data";
+import type { ItemWithType } from "@/src/lib/db/items";
 import { Badge } from "@/src/components/ui/badge";
 
-const itemTypeById = Object.fromEntries(
-  itemTypes.map((type) => [type.id, type]),
-);
-
-export function ItemRow({ item }: { item: Item }) {
-  const type = itemTypeById[item.typeId];
+export function ItemRow({ item }: { item: ItemWithType }) {
+  const icon = item.type.icon ?? "File";
+  const color = item.type.color ?? undefined;
 
   return (
     <Link
       href={`/items/${item.id}`}
       className="flex items-start gap-3 rounded-lg border border-border p-4 transition-colors hover:border-primary/50"
+      style={color ? { borderLeftColor: color, borderLeftWidth: "3px" } : undefined}
     >
       <span
         className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-md bg-muted"
-        style={{ color: type?.color }}
+        style={{ color }}
       >
-        {createElement(getItemTypeIcon(type?.icon ?? "File"), {
-          className: "size-4",
-        })}
+        {createElement(getItemTypeIcon(icon), { className: "size-4" })}
       </span>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1">
@@ -36,6 +32,9 @@ export function ItemRow({ item }: { item: Item }) {
           {item.isFavorite && (
             <Star className="size-3.5 shrink-0 fill-amber-400 text-amber-400" />
           )}
+          <Badge variant="outline" className="shrink-0 text-xs" style={{ color }}>
+            {item.type.name}
+          </Badge>
         </div>
         {item.description && (
           <p className="truncate text-sm text-muted-foreground">
@@ -45,8 +44,8 @@ export function ItemRow({ item }: { item: Item }) {
         {item.tags.length > 0 && (
           <div className="mt-1 flex flex-wrap gap-1.5">
             {item.tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
+              <Badge key={tag.name} variant="secondary">
+                {tag.name}
               </Badge>
             ))}
           </div>
@@ -54,7 +53,7 @@ export function ItemRow({ item }: { item: Item }) {
       </div>
 
       <span className="shrink-0 text-xs text-muted-foreground">
-        {item.createdAt}
+        {item.createdAt.toLocaleDateString()}
       </span>
     </Link>
   );

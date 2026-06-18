@@ -1,11 +1,24 @@
 import { Pin } from "lucide-react";
 
-import { items } from "@/src/lib/mock-data";
+import { getPinnedItems } from "@/src/lib/db/items";
 import { ItemRow } from "@/src/components/dashboard/ItemRow";
 
-const pinnedItems = items.filter((item) => item.isPinned);
+// Hardcoded to the demo user until auth is in place.
+const DEMO_USER_EMAIL = "demo@devstash.io";
 
-export function PinnedItems() {
+async function getDemoUserId(): Promise<string | null> {
+  const { prisma } = await import("@/src/lib/prisma");
+  const user = await prisma.user.findUnique({
+    where: { email: DEMO_USER_EMAIL },
+    select: { id: true },
+  });
+  return user?.id ?? null;
+}
+
+export async function PinnedItems() {
+  const userId = await getDemoUserId();
+  const pinnedItems = userId ? await getPinnedItems(userId) : [];
+
   if (pinnedItems.length === 0) return null;
 
   return (

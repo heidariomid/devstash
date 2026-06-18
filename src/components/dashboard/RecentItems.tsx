@@ -1,14 +1,24 @@
 import { Clock } from "lucide-react";
 
-import { items } from "@/src/lib/mock-data";
+import { getRecentItems } from "@/src/lib/db/items";
 import { ItemRow } from "@/src/components/dashboard/ItemRow";
 
-// Sort by createdAt descending and take the 10 most recent.
-const recentItems = [...items]
-  .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-  .slice(0, 10);
+// Hardcoded to the demo user until auth is in place.
+const DEMO_USER_EMAIL = "demo@devstash.io";
 
-export function RecentItems() {
+async function getDemoUserId(): Promise<string | null> {
+  const { prisma } = await import("@/src/lib/prisma");
+  const user = await prisma.user.findUnique({
+    where: { email: DEMO_USER_EMAIL },
+    select: { id: true },
+  });
+  return user?.id ?? null;
+}
+
+export async function RecentItems() {
+  const userId = await getDemoUserId();
+  const recentItems = userId ? await getRecentItems(userId) : [];
+
   return (
     <section>
       <div className="mb-4 flex items-center gap-2">
