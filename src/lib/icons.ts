@@ -5,17 +5,17 @@ import {
   Image,
   Link,
   Sparkles,
+  StickyNote,
   Terminal,
   type LucideIcon,
 } from "lucide-react";
 
-// Maps the lucide icon names stored as strings on ItemType (see mock-data.ts)
-// to their actual components. Falls back to File for any unknown name.
 const ICONS: Record<string, LucideIcon> = {
   Code,
   Sparkles,
   Terminal,
   FileText,
+  StickyNote,
   File,
   Image,
   Link,
