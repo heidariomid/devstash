@@ -24,8 +24,13 @@ async function getDemoUserId(): Promise<string | null> {
 }
 
 export async function RecentCollections() {
-  const userId = await getDemoUserId();
-  const collections = userId ? await getRecentCollections(userId) : [];
+  let collections: Awaited<ReturnType<typeof getRecentCollections>> = [];
+  try {
+    const userId = await getDemoUserId();
+    if (userId) collections = await getRecentCollections(userId);
+  } catch {
+    // DB unreachable — render empty
+  }
 
   return (
     <section>

@@ -16,8 +16,13 @@ async function getDemoUserId(): Promise<string | null> {
 }
 
 export async function PinnedItems() {
-  const userId = await getDemoUserId();
-  const pinnedItems = userId ? await getPinnedItems(userId) : [];
+  let pinnedItems: Awaited<ReturnType<typeof getPinnedItems>> = [];
+  try {
+    const userId = await getDemoUserId();
+    if (userId) pinnedItems = await getPinnedItems(userId);
+  } catch {
+    // DB unreachable — render empty
+  }
 
   if (pinnedItems.length === 0) return null;
 

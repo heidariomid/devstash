@@ -3,6 +3,7 @@ import { PrismaClient } from "@/src/generated/prisma/client";
 
 const adapter = new PrismaNeon({
   connectionString: process.env.DATABASE_URL,
+  connectionTimeoutMillis: 5000,
 });
 
 const globalForPrisma = globalThis as unknown as {

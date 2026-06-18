@@ -42,3 +42,4 @@ Do not use `src/lib/mock-data.ts` for item data — DB only.
 - feat: seed database with sample data per seed-spec
 - feat: dashboard collections live data from Neon DB via Prisma
 - feat: dashboard items live data from Neon DB via Prisma
+- fix: graceful DB error handling and connection timeout for offline/no-VPN environments

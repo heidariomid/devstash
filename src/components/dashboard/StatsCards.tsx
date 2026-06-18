@@ -23,10 +23,13 @@ interface Stat {
 }
 
 export async function StatsCards() {
-  const userId = await getDemoUserId();
-  const stats = userId
-    ? await getDashboardStats(userId)
-    : { totalItems: 0, totalCollections: 0, favoriteItems: 0, favoriteCollections: 0 };
+  let stats = { totalItems: 0, totalCollections: 0, favoriteItems: 0, favoriteCollections: 0 };
+  try {
+    const userId = await getDemoUserId();
+    if (userId) stats = await getDashboardStats(userId);
+  } catch {
+    // DB unreachable — render with zeros
+  }
 
   const cards: Stat[] = [
     { label: "Items", value: stats.totalItems, icon: FileStack },
