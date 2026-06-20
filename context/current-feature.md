@@ -36,3 +36,4 @@
 - fix: graceful DB error handling and connection timeout for offline/no-VPN environments
 - feat: sidebar item types & collections live data from Neon DB via Prisma
 - feat: add PRO badge to file & image types in sidebar
+- feat: set up NextAuth v5 auth with GitHub OAuth provider (phase 1)
