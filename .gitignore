@@ -44,3 +44,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/.vscode
+/.vscode/*
+**.vscode
+#why .vscode still shows up in the git status? because of the settings.json file that is being tracked. we can either remove it from the repo or ignore it. for now, let's ignore it.
+# so ignore it:
+/.vscode/settings.json
