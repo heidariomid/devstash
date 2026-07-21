@@ -37,3 +37,4 @@
 - feat: sidebar item types & collections live data from Neon DB via Prisma
 - feat: add PRO badge to file & image types in sidebar
 - feat: set up NextAuth v5 auth with GitHub OAuth provider (phase 1)
+- feat: add Credentials email/password provider with registration & Zod validation (phase 2)
