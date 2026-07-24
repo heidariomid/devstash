@@ -1,14 +1,13 @@
 import Link from "next/link";
-import { ChevronDown, Settings, Star } from "lucide-react";
+import { ChevronDown, Star } from "lucide-react";
 
+import { auth } from "@/src/auth";
 import { getSidebarCollections } from "@/src/lib/db/collections";
 import { getSystemItemTypes } from "@/src/lib/db/items";
 import { getDemoUserId } from "@/src/lib/db/user";
 import { getItemTypeIcon } from "@/src/lib/icons";
-import { currentUser } from "@/src/lib/mock-data";
-import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
+import { SidebarUser } from "@/src/components/auth/SidebarUser";
 import { Badge } from "@/src/components/ui/badge";
-import { Button } from "@/src/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
@@ -37,6 +36,7 @@ function typeSlug(name: string) {
 const PRO_TYPES = new Set(["file", "image"]);
 
 export async function DashboardSidebar() {
+  const session = await auth();
   let itemTypes: Awaited<ReturnType<typeof getSystemItemTypes>> = [];
   let favorites: Awaited<ReturnType<typeof getSidebarCollections>>["favorites"] =
     [];
@@ -188,37 +188,11 @@ export async function DashboardSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="border-t border-border">
-        <div className="flex items-center gap-2 p-1">
-          <Avatar className="size-8">
-            {currentUser.avatarUrl && (
-              <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} />
-            )}
-            <AvatarFallback>
-              {currentUser.name
-                .split(" ")
-                .map((part) => part[0])
-                .join("")
-                .slice(0, 2)
-                .toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex min-w-0 flex-1 flex-col">
-            <span className="truncate text-sm font-medium">
-              {currentUser.name}
-            </span>
-            <span className="truncate text-xs text-muted-foreground">
-              {currentUser.email}
-            </span>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-8 shrink-0"
-            aria-label="Settings"
-          >
-            <Settings className="size-4" />
-          </Button>
-        </div>
+        <SidebarUser
+          name={session?.user?.name}
+          email={session?.user?.email}
+          image={session?.user?.image}
+        />
       </SidebarFooter>
     </Sidebar>
   );

@@ -11,6 +11,12 @@ import type { NextAuthConfig } from "next-auth";
 // real validation. auth.ts overrides it with bcrypt + Prisma logic, which
 // only run in the Node runtime.
 export default {
+  // Custom UI replaces NextAuth's built-in pages. Errors are surfaced in
+  // the sign-in form itself rather than on a separate error page.
+  pages: {
+    signIn: "/sign-in",
+    error: "/sign-in",
+  },
   providers: [
     GitHub,
     Credentials({

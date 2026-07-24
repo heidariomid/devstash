@@ -38,3 +38,5 @@
 - feat: add PRO badge to file & image types in sidebar
 - feat: set up NextAuth v5 auth with GitHub OAuth provider (phase 1)
 - feat: add Credentials email/password provider with registration & Zod validation (phase 2)
+- feat: add custom sign-in, register & sidebar user menu auth UI (phase 3)
+- feat: add next-themes provider & theme toggle with dark default

@@ -32,3 +32,19 @@ export const registerSchema = z
   });
 
 export type RegisterInput = z.infer<typeof registerSchema>;
+
+// Sign-in only checks that the fields are present and well-formed. Whether
+// the credentials are *correct* is decided by the Credentials provider, which
+// deliberately returns one generic error so we don't leak which field was wrong.
+export const signInSchema = z.object({
+  email: z
+    .string({ error: "Enter a valid email address." })
+    .trim()
+    .toLowerCase()
+    .pipe(z.email("Enter a valid email address.")),
+  password: z
+    .string({ error: "Password is required." })
+    .min(1, "Password is required."),
+});
+
+export type SignInInput = z.infer<typeof signInSchema>;

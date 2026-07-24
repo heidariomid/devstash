@@ -1,5 +1,6 @@
 import { FolderPlus, Plus, Search } from "lucide-react";
 
+import { ThemeToggle } from "@/src/components/theme/ThemeToggle";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { Separator } from "@/src/components/ui/separator";
@@ -28,6 +29,7 @@ export function TopBar() {
       </div>
 
       <div className="flex items-center gap-2">
+        <ThemeToggle />
         <Button variant="outline" size="sm" className="hidden sm:inline-flex">
           <FolderPlus className="size-4" />
           New Collection
