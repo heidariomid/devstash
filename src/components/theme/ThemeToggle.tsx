@@ -33,10 +33,18 @@ export function ThemeToggle() {
 
     setTheme(isDark ? "light" : "dark");
 
-    // Two frames: one for the class change, one for the repaint under it.
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => delete root.dataset.themeSwitching)
-    );
+    // next-themes swaps the class in an effect, so the new palette isn't
+    // painted until a frame or two later. Clearing the flag before that
+    // paint lands leaves a colour delta for the restored transitions to
+    // animate — the flicker. Wait for a frame *after* the paint completes.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        // Force a style read so the new palette is committed before the
+        // suppression is lifted.
+        void getComputedStyle(root).backgroundColor;
+        requestAnimationFrame(() => delete root.dataset.themeSwitching);
+      });
+    });
   }
 
   return (
