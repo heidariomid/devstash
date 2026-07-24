@@ -7,7 +7,7 @@ import { SignInForm } from "@/src/components/auth/SignInForm";
 import { Skeleton } from "@/src/components/ui/skeleton";
 
 export const metadata: Metadata = {
-  title: "Sign in | DevStash",
+  title: "Sign in | DevStash"
 };
 
 export default async function SignInPage() {
@@ -19,7 +19,7 @@ export default async function SignInPage() {
   return (
     // SignInForm reads ?callbackUrl via useSearchParams, which needs a
     // Suspense boundary so the rest of the page can still be prerendered.
-    <Suspense fallback={<Skeleton className="h-[26rem] w-full max-w-sm" />}>
+    <Suspense fallback={<Skeleton className="h-104 w-full max-w-sm" />}>
       <SignInForm />
     </Suspense>
   );

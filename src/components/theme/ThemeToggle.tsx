@@ -22,12 +22,29 @@ export function ThemeToggle() {
 
   const isDark = resolvedTheme === "dark";
 
+  // Vendored shadcn primitives carry their own `transition-all` /
+  // `transition-[color,...]` classes for hover and focus. Those would also
+  // animate on a theme swap, so every button, badge and row fades on its own
+  // clock. Flag the document while switching and let globals.css suppress
+  // them, then clear the flag once the new palette has been painted.
+  function handleToggle() {
+    const root = document.documentElement;
+    root.dataset.themeSwitching = "";
+
+    setTheme(isDark ? "light" : "dark");
+
+    // Two frames: one for the class change, one for the repaint under it.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => delete root.dataset.themeSwitching)
+    );
+  }
+
   return (
     <Button
       variant="ghost"
       size="icon"
       className="size-8"
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      onClick={handleToggle}
       disabled={!mounted}
       aria-label={
         mounted ? `Switch to ${isDark ? "light" : "dark"} theme` : "Toggle theme"

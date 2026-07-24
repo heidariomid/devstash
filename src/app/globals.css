@@ -113,6 +113,15 @@
       color 200ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  /* Buttons, badges and rows ship their own hover/focus transitions
+     (`transition-all`, `transition-[color,box-shadow]`) from the vendored
+     shadcn primitives, which would also fire on a theme swap. ThemeToggle
+     sets this flag for the duration of the switch so only `body` animates;
+     hover and focus transitions are untouched the rest of the time. */
+  [data-theme-switching] *:not(body) {
+    transition-property: none !important;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     body {
       transition-duration: 0.01ms;
